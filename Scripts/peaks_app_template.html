@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<title>Sri Lanka Peaks — what can you see from here?</title>
+<style>/*__LEAFLET_CSS__*/</style>
+<script>/*__LEAFLET_JS__*/</script>
+<style>
+:root{
+  --bg:#0b1020; --surf:#131a2e; --surf2:#1a2340; --surf3:#222c4d;
+  --line:#2b3557; --line2:#3a4770;
+  --ink:#eef2ff; --ink2:#c3cce8; --muted:#8e9bc0;
+  --gold:#ffb454; --gold-d:#e89a35; --teal:#5fd6b4; --rose:#ff7f6e;
+  --sky1:#0d1b33; --sky2:#2a4a70; --sky3:#7fa0bd;
+  --r:14px; --r-s:10px;
+  --sh:0 10px 34px rgba(0,0,0,.5), 0 2px 8px rgba(0,0,0,.3);
+  --safe-b:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font:15px/1.55 ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px}
+::-webkit-scrollbar-track{background:transparent}
+
+/* ============ chrome ============ */
+#top{position:absolute;top:0;left:0;right:0;height:60px;z-index:3000;display:flex;
+  align-items:center;gap:14px;padding:0 16px;background:rgba(19,26,46,.92);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+#brand{display:flex;align-items:center;gap:10px;min-width:0}
+#brand .mk{width:32px;height:32px;flex:0 0 auto}
+#brand b{display:block;font-size:15.5px;font-weight:680;letter-spacing:-.01em;
+  white-space:nowrap}
+#brand span{display:block;font-size:11px;color:var(--muted);margin-top:-2px;
+  white-space:nowrap}
+.seg{display:flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;
+  padding:3px;gap:2px;flex:0 0 auto}
+.seg button{padding:7px 16px;border-radius:9px;color:var(--muted);font-size:13.5px;
+  font-weight:600;transition:.16s;display:flex;align-items:center;gap:7px}
+.seg button:hover{color:var(--ink)}
+.seg button.on{background:linear-gradient(180deg,var(--gold),var(--gold-d));
+  color:#2a1a05;box-shadow:0 2px 10px rgba(255,180,84,.3)}
+.seg button svg{width:15px;height:15px}
+/* brand lockup, kept in the chrome rather than over the map or the view */
+#byline{margin-left:auto;display:flex;align-items:center;gap:11px;
+  padding-right:13px;margin-right:3px;border-right:1px solid var(--line)}
+#byline .lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.13em;
+  color:var(--muted);white-space:nowrap}
+#byline img{height:19px;width:auto;opacity:.92;display:block}
+#topact{display:flex;gap:8px;align-items:center}
+/* the brand's connective motif: one faint contour line, nothing else */
+#contour{position:absolute;left:0;right:0;bottom:-1px;height:8px;
+  pointer-events:none;opacity:.5}
+.ico{width:38px;height:38px;border-radius:11px;border:1px solid var(--line);
+  background:var(--surf2);display:flex;align-items:center;justify-content:center;
+  transition:.16s;color:var(--ink2)}
+.ico:hover{background:var(--surf3);border-color:var(--line2);color:var(--ink)}
+.ico svg{width:17px;height:17px}
+
+.page{position:absolute;top:60px;left:0;right:0;bottom:0;display:none}
+.page.on{display:block}
+
+/* ============ map ============ */
+#map{position:absolute;inset:0;background:var(--bg)}
+.leaflet-container{background:#0b1020;font:inherit}
+.leaflet-control-zoom a{background:var(--surf2)!important;color:var(--ink)!important;
+  border-color:var(--line)!important}
+.leaflet-control-attribution{background:rgba(19,26,46,.8)!important;
+  color:var(--muted)!important;font-size:10px!important}
+.leaflet-control-attribution a{color:var(--muted)!important}
+
+.card{background:rgba(19,26,46,.96);backdrop-filter:blur(16px);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--sh)}
+#side{position:absolute;top:14px;right:14px;width:310px;z-index:1200;
+  max-height:calc(100% - 28px);display:flex;flex-direction:column;overflow:hidden}
+.sechd{padding:12px 14px 9px;display:flex;align-items:center;gap:8px}
+.sechd h3{margin:0;font-size:11px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--muted);font-weight:700}
+.sechd .cnt{margin-left:auto;font-size:11px;color:var(--muted);
+  background:var(--surf2);padding:2px 8px;border-radius:20px}
+.srch{position:relative;padding:0 14px 11px}
+.srch input{width:100%;background:var(--bg);border:1px solid var(--line);
+  border-radius:var(--r-s);padding:9px 11px 9px 34px;font-size:13.5px;outline:none;
+  transition:.16s}
+.srch input:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(255,180,84,.13)}
+.srch svg{position:absolute;left:24px;top:10px;width:15px;height:15px;color:var(--muted)}
+#plist{overflow-y:auto;flex:1;min-height:130px;border-top:1px solid var(--line)}
+.prow{display:flex;align-items:center;gap:10px;padding:8px 14px;cursor:pointer;
+  border-left:3px solid transparent;transition:.13s}
+.prow:hover{background:var(--surf2)}
+.prow.sel{background:linear-gradient(90deg,rgba(255,180,84,.16),transparent);
+  border-left-color:var(--gold)}
+.num{flex:0 0 auto;width:25px;height:25px;border-radius:8px;background:var(--surf2);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:750;color:var(--gold);font-variant-numeric:tabular-nums}
+.prow.sel .num{background:var(--gold);color:#2a1a05;border-color:var(--gold)}
+.pnm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13.5px}
+.pnm i{color:var(--muted);font-style:normal;font-size:12.5px}
+.pel{color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums;
+  flex:0 0 auto}
+
+#info{position:absolute;left:14px;bottom:14px;width:330px;z-index:1200;overflow:hidden}
+#infobody{padding:14px}
+.verdict{display:flex;align-items:center;gap:11px;padding:13px 14px;
+  border-radius:var(--r-s);margin-bottom:12px}
+.verdict.yes{background:linear-gradient(135deg,rgba(95,214,180,.19),rgba(95,214,180,.06));
+  border:1px solid rgba(95,214,180,.35)}
+.verdict.no{background:linear-gradient(135deg,rgba(255,127,110,.17),rgba(255,127,110,.05));
+  border:1px solid rgba(255,127,110,.32)}
+.verdict .vi{width:34px;height:34px;border-radius:11px;display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto}
+.verdict.yes .vi{background:rgba(95,214,180,.2);color:var(--teal)}
+.verdict.no .vi{background:rgba(255,127,110,.18);color:var(--rose)}
+.verdict .vi svg{width:19px;height:19px}
+.verdict b{display:block;font-size:14.5px;letter-spacing:-.01em}
+.verdict small{display:block;color:var(--ink2);font-size:12px;margin-top:1px}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:5px 14px;font-size:13px}
+.kv dt{color:var(--muted);white-space:nowrap}
+.kv dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  margin-top:12px;padding:11px;border-radius:var(--r-s);font-size:13.5px;font-weight:650;
+  background:linear-gradient(180deg,var(--gold),var(--gold-d));color:#2a1a05;
+  transition:.16s;box-shadow:0 3px 14px rgba(255,180,84,.24)}
+.btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn svg{width:16px;height:16px}
+.btn.ghost{background:none;border:1px solid var(--line);color:var(--ink2);
+  box-shadow:none;font-weight:550}
+.btn.ghost:hover{background:var(--surf2);transform:none}
+.hint{color:var(--muted);font-size:13px;line-height:1.6}
+
+/* legend as a gradient ramp */
+.ramp{display:flex;height:9px;border-radius:5px;overflow:hidden;margin:3px 0 7px}
+.ramp i{flex:1}
+.rlab{display:flex;justify-content:space-between;font-size:10.5px;color:var(--muted)}
+.legrow{display:flex;align-items:center;gap:9px;font-size:12.5px;padding:3px 0}
+.sw{width:14px;height:14px;border-radius:4px;flex:0 0 auto;
+  border:1px solid rgba(255,255,255,.2)}
+
+/* peak markers */
+.pkmark{background:none;border:0}
+.pkmark .dot{width:24px;height:24px;border-radius:50%;background:rgba(19,26,46,.94);
+  border:1.8px solid var(--gold);color:var(--gold);font:750 10.5px/1 ui-sans-serif;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(0,0,0,.55);transition:.14s}
+.pkmark:hover .dot{transform:scale(1.16);background:var(--gold);color:#2a1a05}
+.pkmark.sel .dot{background:var(--gold);color:#2a1a05;transform:scale(1.28);
+  box-shadow:0 0 0 5px rgba(255,180,84,.26),0 2px 10px rgba(0,0,0,.5)}
+.pkmark.sm .dot{width:11px;height:11px;border-width:1.4px;font-size:0;
+  box-shadow:0 1px 5px rgba(0,0,0,.5)}
+.mepin{background:none;border:0}
+.mepin div{width:18px;height:18px;border-radius:50%;background:var(--teal);
+  border:3px solid #0b1020;box-shadow:0 0 0 4px rgba(95,214,180,.3)}
+
+/* ============ view / panorama ============ */
+#view{position:absolute;inset:0;display:flex;flex-direction:column;padding:14px;gap:12px}
+#vbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:11px 14px;
+  background:var(--surf);border:1px solid var(--line);border-radius:var(--r)}
+.ctl{display:flex;align-items:center;gap:10px;padding:0 12px;border-right:1px solid var(--line)}
+.ctl:last-child{border-right:0}
+.ctl .lb{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);
+  font-weight:650;white-space:nowrap}
+.ctl .vl{font-size:13px;font-weight:650;min-width:52px;font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;appearance:none;height:4px;border-radius:4px;
+  background:var(--line2);outline:none;width:132px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+  border-radius:50%;background:var(--gold);cursor:pointer;
+  box-shadow:0 2px 7px rgba(0,0,0,.5),0 0 0 3px rgba(255,180,84,.2)}
+input[type=range]::-moz-range-thumb{width:16px;height:16px;border:0;border-radius:50%;
+  background:var(--gold);cursor:pointer}
+.chip{padding:7px 13px;border-radius:9px;border:1px solid var(--line);background:var(--surf2);
+  font-size:12.5px;font-weight:600;color:var(--ink2);transition:.15s;display:flex;
+  align-items:center;gap:7px}
+.chip:hover{background:var(--surf3);color:var(--ink)}
+.chip.on{background:var(--gold);color:#2a1a05;border-color:var(--gold)}
+.chip svg{width:14px;height:14px}
+
+#vmain{flex:1;min-height:0;display:flex;gap:12px}
+#cvwrap{flex:1;min-width:0;border:1px solid var(--line);border-radius:var(--r);
+  overflow:hidden;position:relative;background:#070c18}
+#cv{width:100%;height:100%;display:block;cursor:crosshair}
+#vlist{width:262px;flex:0 0 auto;background:var(--surf);border:1px solid var(--line);
+  border-radius:var(--r);overflow:hidden;display:flex;flex-direction:column}
+#vlistin{overflow-y:auto;flex:1}
+#vfoot{padding:11px 14px;background:var(--surf);border:1px solid var(--line);
+  border-radius:var(--r);font-size:12.5px;color:var(--ink2);line-height:1.6}
+#vfoot b{color:var(--ink)}
+#vfoot .sub{color:var(--muted);font-size:11.5px;margin-top:3px}
+#tip{position:absolute;pointer-events:none;background:rgba(11,16,32,.97);
+  border:1px solid var(--line2);border-radius:var(--r-s);padding:8px 11px;font-size:12px;
+  display:none;z-index:12;white-space:nowrap;box-shadow:var(--sh)}
+#tip b{color:var(--gold)}
+/* first-run nudges: they explain the one gesture that is not obvious, then go */
+.nudge{position:absolute;z-index:14;background:rgba(11,16,32,.93);
+  border:1px solid var(--line2);border-radius:24px;padding:9px 16px;font-size:12.5px;
+  color:var(--ink2);box-shadow:var(--sh);display:flex;align-items:center;gap:9px;
+  pointer-events:none;transition:opacity .5s}
+.nudge.gone{opacity:0}
+.nudge svg{width:15px;height:15px;color:var(--gold);flex:0 0 auto}
+#dragNudge{left:50%;transform:translateX(-50%);bottom:44px}
+#mapNudge{left:50%;transform:translateX(-50%);bottom:22px;z-index:1300}
+kbd{background:var(--surf3);border:1px solid var(--line2);border-bottom-width:2px;
+  border-radius:5px;padding:1px 6px;font:600 11px ui-monospace,monospace;color:var(--ink)}
+.vsdot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:0 0 auto;
+  box-shadow:0 0 0 2px rgba(255,180,84,.22)}
+
+/* ============ overlays ============ */
+#veil{position:fixed;inset:0;z-index:5000;background:rgba(6,9,20,.82);
+  backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;
+  padding:20px}
+#veil.hide{display:none}
+.modal{max-width:530px;width:100%;background:var(--surf);border:1px solid var(--line);
+  border-radius:20px;padding:30px;box-shadow:var(--sh);animation:pop .3s ease}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.98)}}
+.modal h1{margin:0 0 8px;font-size:25px;letter-spacing:-.02em;line-height:1.2}
+.modal h1 em{font-style:normal;color:var(--gold)}
+.modal p{margin:0 0 18px;color:var(--ink2);font-size:14.5px}
+.steps{display:grid;gap:11px;margin-bottom:22px}
+.step{display:flex;gap:12px;align-items:flex-start;padding:12px;border-radius:12px;
+  background:var(--surf2);border:1px solid var(--line)}
+.step .n{width:26px;height:26px;border-radius:8px;background:var(--gold);color:#2a1a05;
+  font-weight:750;font-size:12.5px;display:flex;align-items:center;justify-content:center;
+  flex:0 0 auto}
+.step b{display:block;font-size:13.5px}
+.step small{color:var(--muted);font-size:12.5px}
+#load{position:fixed;inset:0;z-index:6000;background:var(--bg);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:16px}
+#load.hide{display:none}
+.spin{width:36px;height:36px;border:3px solid var(--line2);border-top-color:var(--gold);
+  border-radius:50%;animation:sp .8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#load span{color:var(--muted);font-size:13.5px}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:26px;z-index:7000;
+  background:var(--surf3);border:1px solid var(--line2);border-radius:11px;
+  padding:11px 18px;font-size:13.5px;box-shadow:var(--sh);opacity:0;pointer-events:none;
+  transition:.25s}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(-6px)}
+
+/* ============ mobile ============ */
+#sheetgrip{display:none}
+@media (max-width:820px){
+  #top{height:54px;padding:0 11px;gap:9px}
+  #brand span{display:none}
+  #brand b{font-size:14px}
+  .seg button{padding:7px 11px;font-size:12.5px}
+  .seg button .tx{display:none}
+  .page{top:54px}
+  #side{position:absolute;left:0;right:0;bottom:0;top:auto;width:auto;
+    max-height:56%;border-radius:18px 18px 0 0;transform:translateY(calc(100% - 122px));
+    transition:transform .3s cubic-bezier(.4,0,.2,1)}
+  #side.up{transform:translateY(0)}
+  #sheetgrip{display:block;padding:9px 0 3px;text-align:center;cursor:pointer}
+  #sheetgrip i{display:inline-block;width:38px;height:4px;border-radius:4px;
+    background:var(--line2)}
+  #info{left:10px;right:10px;bottom:132px;width:auto;max-height:44%;overflow-y:auto}
+  #view{padding:8px;gap:8px}
+  #vmain{flex-direction:column;gap:8px}
+  /* the panorama is the point on a phone - give it the room */
+  #cvwrap{flex:1 1 auto;min-height:0}
+  #vlist{width:auto;flex:0 0 auto;max-height:none;background:none;border:0}
+  #vlist .sechd{display:none}
+  #vlistin{display:flex;flex-direction:row;overflow-x:auto;overflow-y:hidden;
+    gap:7px;padding:1px}
+  #vlistin .prow{flex:0 0 auto;border-left:0;border:1px solid var(--line);
+    border-radius:11px;padding:7px 11px;background:var(--surf2)}
+  #vlistin .prow.sel,#vlistin .prow:hover{background:var(--surf3)}
+  #vlistin .pnm{max-width:108px;font-size:12.5px}
+  #vlistin .hint{white-space:normal;min-width:230px}
+  #vbar{gap:3px;padding:7px 8px;row-gap:6px}
+  .ctl{padding:0 7px;gap:6px;border-right:0}
+  .ctl .lb{display:none}
+  .ctl .vl{min-width:44px;font-size:12px}
+  input[type=range]{width:82px}
+  .chip{padding:6px 10px;font-size:11.5px}
+  #vfoot{padding:9px 11px;font-size:11.5px;max-height:74px;overflow-y:auto}
+  .modal{padding:22px}
+  .modal h1{font-size:21px}
+}
+</style>
+</head>
+<body>
+
+<div id="load"><div class="spin"></div><span>Loading Sri Lanka terrain…</span></div>
+
+<div id="veil" class="hide"><div class="modal">
+  <h1>What can you see from <em>anywhere</em> in Sri Lanka?</h1>
+  <p>This maps every mountain on the island and works out, from the shape of the
+     land itself, exactly which peaks are visible from any spot you choose.</p>
+  <div class="steps">
+    <div class="step"><div class="n">1</div><div>
+      <b>Tap anywhere on the map</b>
+      <small>Your village, your roof, a road — anywhere.</small></div></div>
+    <div class="step"><div class="n">2</div><div>
+      <b>See the skyline you would really look at</b>
+      <small>Every mountain that breaks the horizon, named and numbered.</small></div></div>
+    <div class="step"><div class="n">3</div><div>
+      <b>Or pick a mountain</b>
+      <small>See every place in the country it can be seen from.</small></div></div>
+  </div>
+  <div style="font-size:12px;color:var(--muted);margin:-6px 0 18px;line-height:1.9">
+    Shortcuts — <kbd>M</kbd> map · <kbd>V</kbd> the view · <kbd>←</kbd><kbd>→</kbd> turn ·
+    <kbd>↑</kbd><kbd>↓</kbd> tilt · <kbd>+</kbd><kbd>-</kbd> zoom the lens ·
+    <kbd>F</kbd> fit · <kbd>L</kbd> locate me · <kbd>?</kbd> this help
+  </div>
+  <button class="btn" onclick="closeIntro()">Start exploring</button>
+  <button class="btn ghost" onclick="closeIntro(1)">Don't show this again</button>
+</div></div>
+
+<div id="top">
+  <svg id="contour" viewBox="0 0 1200 8" preserveAspectRatio="none" fill="none">
+    <path d="M0 6 Q150 1 300 5 T600 4 T900 6 T1200 3" stroke="#1E78B0" stroke-width="1" opacity=".55"/>
+    <path d="M0 8 Q170 4 340 7 T680 6 T1020 8 T1200 6" stroke="#2E6B4F" stroke-width="1" opacity=".33"/>
+  </svg>
+  <div id="brand">
+    <img class="mk" id="brandMark" alt="">
+    <div><b>Sri Lanka Peaks</b><span id="brandsub">what you can see, from where</span></div>
+  </div>
+  <div class="seg">
+    <button class="on" data-p="pmap">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 20l-6-3V4l6 3m0 13l6-3m-6 3V7m6 10l6 3V7l-6-3m0 13V4"/></svg>
+      <span class="tx">Map</span></button>
+    <button data-p="pview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M2 20l7-11 4 6 3-4 6 9z"/><circle cx="17" cy="5" r="2.5"/></svg>
+      <span class="tx">The view</span></button>
+  </div>
+  <a id="byline" href="#" onclick="return false" title="Thushan Chamika">
+    <span class="lbl">A project by</span>
+    <img id="brandWord" alt="Thushan Chamika">
+  </a>
+  <div id="topact">
+    <button class="ico" id="btnLoc" title="Use my location (or press L)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3.2"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/>
+        <circle cx="12" cy="12" r="8"/></svg></button>
+    <button class="ico" id="btnShare" title="Copy a link to this view (S)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg></button>
+    <button class="ico" id="btnHelp" title="How this works (?)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 115 .5c0 1.5-2.5 2-2.5 3.5"/>
+        <circle cx="12" cy="17" r="1" fill="currentColor"/></svg></button>
+  </div>
+</div>
+
+<div class="page on" id="pmap">
+  <div id="map"></div>
+  <div class="card" id="side">
+    <div id="sheetgrip"><i></i></div>
+    <div class="sechd"><h3>Mountains</h3><span class="cnt" id="pcount"></span></div>
+    <div class="srch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
+      <input type="search" id="psearch" placeholder="Search a mountain by name or number…">
+    </div>
+    <div id="plist"></div>
+  </div>
+  <div class="card" id="info"><div id="infobody"></div></div>
+  <div class="nudge" id="mapNudge">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 11.5V4.8a1.8 1.8 0 013.6 0v5.4m0 0V9a1.8 1.8 0 013.6 0v1.8m0 0a1.8 1.8 0 013.6 0V16a5 5 0 01-5 5h-3a5 5 0 01-4.3-2.5L4 14.6a1.8 1.8 0 013-2l2 2.4"/></svg>
+    Tap anywhere to stand there — or tap a numbered peak
+  </div>
+</div>
+
+<div class="page" id="pview">
+  <div id="view">
+    <div id="vbar">
+      <div class="ctl"><span class="lb">Eye height</span>
+        <input type="range" id="eye" min="0" max="200" step="1" value="2">
+        <span class="vl" id="eyev">1.7 m</span></div>
+      <div class="ctl"><span class="lb">Looking</span>
+        <input type="range" id="brg" min="0" max="359" step="1" value="90">
+        <span class="vl" id="brgv">90°</span></div>
+      <div class="ctl"><span class="lb">Lens</span>
+        <input type="range" id="fov" min="15" max="150" step="5" value="70">
+        <span class="vl" id="fovv">70°</span></div>
+      <div class="ctl"><span class="lb">Tilt</span>
+        <input type="range" id="pit" min="-60" max="35" step="1" value="0">
+        <span class="vl" id="pitv">0°</span></div>
+      <div class="ctl"><span class="lb">Height&nbsp;scale</span>
+        <input type="range" id="ex" min="1" max="8" step="0.5" value="1">
+        <span class="vl" id="exv">true</span></div>
+      <div class="ctl">
+        <button class="chip" id="autof">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 8V4h4M20 8V4h-4M4 16v4h4M20 16v4h-4"/></svg>Fit</button>
+        <button class="chip" id="spin">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12a9 9 0 11-3-6.7"/><path d="M21 4v5h-5"/></svg>Sweep 360°</button>
+        <button class="chip" id="golden">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4 12H2m20 0h-2"/></svg>
+          Golden hour</button>
+      </div>
+    </div>
+    <div id="vmain">
+      <div id="cvwrap"><canvas id="cv"></canvas><div id="tip"></div>
+        <div class="nudge" id="dragNudge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M8 9L4 12l4 3M16 9l4 3-4 3M12 4v16"/></svg>
+          Drag to look around · <kbd>←</kbd><kbd>→</kbd> turn · <kbd>↑</kbd><kbd>↓</kbd> tilt
+        </div></div>
+      <div id="vlist">
+        <div class="sechd"><h3>On the skyline</h3><span class="cnt" id="vcount"></span></div>
+        <div id="vlistin"></div>
+      </div>
+    </div>
+    <div id="vfoot"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const D = /*__DATA__*/;
+const K=0.13, RE=6371008.8;
+const rad=d=>d*Math.PI/180, deg=r=>r*180/Math.PI;
+const drop=d=>(1-K)*d*d/(2*RE);
+const PK=D.peaks; PK.forEach((p,i)=>p.no=i+1);
+const VSI={}; (D.viewsheds||[]).forEach(v=>VSI[v.id]=v);
+
+/* ---------- terrain grid (elevation packed into PNG R/G) ---------- */
+function decodeGrid(g,cb){
+  const img=new Image();
+  img.onload=()=>{const c=document.createElement('canvas');
+    c.width=img.width;c.height=img.height;
+    const x=c.getContext('2d',{willReadFrequently:true});
+    x.drawImage(img,0,0);
+    const d=x.getImageData(0,0,img.width,img.height).data;
+    const n=img.width*img.height,a=new Float32Array(n);
+    for(let i=0;i<n;i++) a[i]=(((d[i*4]<<8)|d[i*4+1])-32768)/g.scale;
+    g.a=a;g.w=img.width;g.h=img.height;cb();};
+  img.src='data:image/png;base64,'+g.b64;
+}
+function zAt(g,lat,lon){
+  const fc=(lon-g.x0)/g.dx-0.5, fr=(lat-g.y0)/g.dy-0.5;
+  const c0=Math.floor(fc), r0=Math.floor(fr);
+  if(c0<0||c0+1>=g.w||r0<0||r0+1>=g.h) return null;
+  const tc=fc-c0,tr=fr-r0,A=g.a,i=r0*g.w+c0;
+  const a=A[i],b=A[i+1],c=A[i+g.w],e=A[i+g.w+1];
+  if(a<-3000||b<-3000||c<-3000||e<-3000) return null;
+  return (a*(1-tc)+b*tc)*(1-tr)+(c*(1-tc)+e*tc)*tr;
+}
+function geo(la1,lo1,la2,lo2){
+  const p1=rad(la1),p2=rad(la2),dp=rad(la2-la1),dl=rad(lo2-lo1);
+  const a=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;
+  return 2*RE*Math.asin(Math.min(1,Math.sqrt(a)));
+}
+function brgTo(la1,lo1,la2,lo2){
+  const p1=rad(la1),p2=rad(la2),dl=rad(lo2-lo1);
+  return (deg(Math.atan2(Math.sin(dl)*Math.cos(p2),
+    Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl)))+360)%360;
+}
+function dest(la1,lo1,b,s){
+  const d=s/RE,p1=rad(la1),l1=rad(lo1),bb=rad(b);
+  const sp=Math.sin(p1),cp=Math.cos(p1),sd=Math.sin(d),cd=Math.cos(d);
+  const p2=Math.asin(sp*cd+cp*sd*Math.cos(bb));
+  return [deg(p2), deg(l1+Math.atan2(Math.sin(bb)*sd*cp,cd-sp*Math.sin(p2)))];
+}
+/* A frame marches ~500k sample points. Calling the spherical dest() for each
+   costs four trig ops a point and made rendering take tens of seconds. Along a
+   single bearing the track is very nearly a straight line in lat/lon: over
+   190 km this drifts about 30 m, far inside the ~220 m terrain grid, so it
+   cannot move which cell we sample. Precompute the per-degree step once per
+   column and the inner loop becomes two multiplies. */
+function rayStepper(lat,lon,brgDeg){
+  const b=rad(brgDeg);
+  const dLat=Math.cos(b)/110574, dLon=Math.sin(b)/(111320*Math.cos(rad(lat)));
+  return (s,out)=>{out[0]=lat+dLat*s; out[1]=lon+dLon*s; return out;};
+}
+const compass=b=>['N','NNE','NE','ENE','E','ESE','SE','SSE','S','SSW','SW','WSW',
+  'W','WNW','NW','NNW'][Math.round(((b%360)+360)%360/22.5)%16];
+
+/* ---------- map ---------- */
+const map=L.map('map',{center:[7.55,80.7],zoom:8,zoomControl:true,
+  attributionControl:true});
+const BASES={
+ 'Terrain relief':null,
+ 'Dark':'https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png',
+ 'Light':'https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+ 'Satellite':'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+ 'Topographic':'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',
+ 'Streets':'https://tile.openstreetmap.org/{z}/{x}/{y}.png'};
+const relief=L.imageOverlay('data:image/png;base64,'+D.relief.b64,D.relief.bounds,
+  {opacity:1,interactive:false,className:'reliefLyr'});
+let curBase=null;
+function setBase(n){ if(curBase) map.removeLayer(curBase);
+  curBase = BASES[n]===null ? relief : L.tileLayer(BASES[n],{maxZoom:17,
+    attribution:'basemap © provider'});
+  curBase.addTo(map); if(curBase.bringToBack) curBase.bringToBack(); }
+setBase('Terrain relief');
+
+let markers=[], selPeak=null, vsLayer=null, viewPt=null, viewMk=null;
+function drawMarkers(){
+  markers.forEach(m=>map.removeLayer(m)); markers=[];
+  const z=map.getZoom();
+  /* Named summits are what people are actually looking for, so they stay on
+     the map at every zoom; the unnamed high ones fill in as you zoom in. */
+  const cap = z>=11 ? 900 : z>=9 ? 260 : 90;
+  let n=0;
+  const list=PK.filter(p=>{
+    if(p.name) return true;
+    return (n++)<cap;
+  });
+  list.forEach(p=>{
+    const small = !p.name && z<11;
+    const m=L.marker([p.lat,p.lon],{icon:L.divIcon({
+      className:'pkmark'+(small?' sm':'')+(selPeak===p.no?' sel':''),
+      html:`<div class="dot">${p.no}</div>`,iconSize:[24,24],iconAnchor:[12,12]}),
+      zIndexOffset: selPeak===p.no?1000:0});
+    m.on('click',ev=>{L.DomEvent.stopPropagation(ev);selectPeak(p.no);});
+    m.addTo(map); markers.push(m);
+  });
+  document.getElementById('pcount').textContent=`${list.length} of ${PK.length}`;
+}
+map.on('zoomend',drawMarkers);
+
+function renderList(q){
+  q=(q||'').trim().toLowerCase();
+  const rows=PK.filter(p=>!q||(p.name||'').toLowerCase().includes(q)||String(p.no)===q)
+               .slice(0,300);
+  document.getElementById('plist').innerHTML = rows.length? rows.map(p=>
+    `<div class="prow${selPeak===p.no?' sel':''}" data-no="${p.no}"
+       title="${p.name||'Unnamed summit'} · ${Math.round(p.elev_m)} m${
+         p.vsid?' · full visibility map available':''}">
+       <div class="num">${p.no}</div>
+       <div class="pnm">${p.name||'<i>unnamed summit</i>'}</div>
+       ${p.vsid?'<span class="vsdot"></span>':''}
+       <div class="pel">${Math.round(p.elev_m)} m</div></div>`).join('')
+    : '<div style="padding:22px 14px" class="hint">No mountain matches that.</div>';
+  [...document.querySelectorAll('#plist .prow')].forEach(r=>
+    r.onclick=()=>selectPeak(+r.dataset.no));
+}
+document.getElementById('psearch').oninput=e=>renderList(e.target.value);
+
+function selectPeak(no){
+  selPeak=no; const p=PK[no-1];
+  map.setView([p.lat,p.lon],Math.max(map.getZoom(),10));
+  if(vsLayer){map.removeLayer(vsLayer);vsLayer=null;}
+  const v=VSI[p.vsid];
+  if(v) vsLayer=L.imageOverlay(v.png,v.bounds,{opacity:.75,interactive:false}).addTo(map);
+  const el=Math.round(p.elev_m), pr=Math.round(p.prominence_m);
+  let h='';
+  if(v){
+    h+=`<div class="verdict yes"><div class="vi">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
+      </div><div><b>Visible from ${Math.round(v.visible_land_km2).toLocaleString()} km²</b>
+      <small>That is ${v.visible_pct_of_island}% of Sri Lanka — shown in gold</small></div></div>`;
+  }
+  h+=`<dl class="kv">
+     <dt>Height</dt><dd>${el.toLocaleString()} m</dd>
+     <dt>Stands above its saddle by</dt><dd>${pr.toLocaleString()} m</dd>
+     <dt>Can be seen up to</dt><dd>${v?v.range_km+' km':'—'}</dd>
+     <dt>Location</dt><dd>${p.lat.toFixed(3)}, ${p.lon.toFixed(3)}</dd></dl>`;
+  if(!v) h+=`<div class="hint" style="margin-top:10px">The full visibility map is
+      precomputed for the ${(D.viewsheds||[]).length} most prominent mountains.
+      You can still stand on this one and look around.</div>`;
+  h+=`<button class="btn" onclick="standHere(${p.lat},${p.lon})">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M2 20l7-11 4 6 3-4 6 9z"/></svg>Stand on this summit</button>`;
+  document.getElementById('infobody').innerHTML=`<div style="font-size:16px;
+    font-weight:680;letter-spacing:-.01em;margin-bottom:3px">
+    <span style="color:var(--gold)">#${p.no}</span> ${p.name||'Unnamed summit'}</div>
+    <div class="hint" style="margin-bottom:12px;font-size:12.5px">${compass(
+      brgTo(7.55,80.7,p.lat,p.lon))} highlands · mountain</div>`+h;
+  drawMarkers(); renderList(document.getElementById('psearch').value);
+}
+function standHere(lat,lon){ setViewPoint(lat,lon); showTab('pview'); }
+
+map.on('click',e=>setViewPoint(e.latlng.lat,e.latlng.lng));
+function setViewPoint(lat,lon){
+  viewPt={lat,lon}; selPeak=null;
+  if(viewMk) map.removeLayer(viewMk);
+  viewMk=L.marker([lat,lon],{icon:L.divIcon({className:'mepin',html:'<div></div>',
+    iconSize:[18,18],iconAnchor:[9,9]}),zIndexOffset:2000}).addTo(map);
+  const z=zAt(D.grids.z,lat,lon);
+  const n=nearestPeaks(lat,lon,3);
+  document.getElementById('infobody').innerHTML=
+   `<div style="font-size:16px;font-weight:680;margin-bottom:3px">You are standing here</div>
+    <div class="hint" style="margin-bottom:12px;font-size:12.5px">
+      ${lat.toFixed(4)}, ${lon.toFixed(4)} · ground ${z===null?'sea level':Math.round(z)+' m'}</div>
+    ${n.length?`<dl class="kv">${n.map(x=>
+      `<dt>#${x.p.no} ${(x.p.name||'unnamed').slice(0,20)}</dt>
+       <dd>${(x.d/1000).toFixed(0)} km ${compass(x.b)}</dd>`).join('')}</dl>`:''}
+    <button class="btn" onclick="showTab('pview')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M2 20l7-11 4 6 3-4 6 9z"/><circle cx="17" cy="5" r="2.5"/></svg>
+      See the view from here</button>`;
+  updateHash();
+}
+function nearestPeaks(lat,lon,k){
+  return PK.map(p=>({p,d:geo(lat,lon,p.lat,p.lon),b:brgTo(lat,lon,p.lat,p.lon)}))
+           .filter(x=>x.d>300).sort((a,b)=>a.d-b.d).slice(0,k);
+}
+
+/* ---------- tabs ---------- */
+function showTab(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id===id));
+  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.p===id));
+  if(id==='pmap') setTimeout(()=>map.invalidateSize(),50);
+  if(id==='pview') render();
+  updateHash();
+}
+document.querySelectorAll('.seg button').forEach(b=>b.onclick=()=>showTab(b.dataset.p));
+
+/* ---------- panorama ---------- */
+const cv=document.getElementById('cv'), tip=document.getElementById('tip');
+const eyeR=document.getElementById('eye'),fovR=document.getElementById('fov'),
+      brgR=document.getElementById('brg');
+const eyeVal=()=>{const v=+eyeR.value;return v<=2?1.7:v;};
+let golden=false;
+const pitR=document.getElementById('pit'), exR=document.getElementById('ex');
+function syncLabels(){
+  document.getElementById('eyev').textContent=eyeVal()<10?eyeVal().toFixed(1)+' m':Math.round(eyeVal())+' m';
+  document.getElementById('fovv').textContent=fovR.value+'°';
+  document.getElementById('brgv').textContent=brgR.value+'° '+compass(+brgR.value);
+  document.getElementById('pitv').textContent=(+pitR.value>0?'+':'')+pitR.value+'°';
+  document.getElementById('exv').textContent=(+exR.value===1)?'true':'×'+(+exR.value);
+}
+[eyeR,fovR,brgR,pitR,exR].forEach(el=>el.oninput=()=>{syncLabels();render();});
+/* frame whatever is on the skyline without leaving true scale unless needed */
+document.getElementById('autof').onclick=()=>{
+  const top=shown.length?Math.max(...shown.map(s=>s.ang)):1.5;
+  const W=document.getElementById('cvwrap').clientWidth||900;
+  const H=document.getElementById('cvwrap').clientHeight||500;
+  const want=+fovR.value*(0.34*H)/(W*Math.max(top,0.15));
+  exR.value=Math.max(1,Math.min(8,Math.round(want*2)/2));
+  pitR.value=Math.round(Math.max(-60,Math.min(35,top*0.35)));
+  syncLabels();render();
+};
+document.getElementById('golden').onclick=e=>{golden=!golden;
+  e.currentTarget.classList.toggle('on',golden);render();};
+
+/* start close: from a summit the ground immediately below is the whole lower
+   half of the view, and a 70 m first step left it blank */
+const STEPS=(()=>{const a=[];let s=18;while(s<190000){a.push(s);s*=1.0125;}return a;})();
+let shown=[];
+
+/* While the user is dragging or sweeping, draw at reduced column and step
+   density so turning stays fluid, then settle to full quality once they stop. */
+let quick=false, settleT=null;
+function renderQuick(){
+  quick=true; render();
+  clearTimeout(settleT);
+  settleT=setTimeout(()=>{quick=false;render();},220);
+}
+function render(){
+  if(!viewPt||!D.grids.z.a) return;
+  const wrap=document.getElementById('cvwrap');
+  const W=wrap.clientWidth,H=wrap.clientHeight;
+  if(W<10||H<10) return;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  cv.width=W*dpr;cv.height=H*dpr;
+  const g=cv.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+
+  const {lat,lon}=viewPt, eye=eyeVal();
+  const zg=zAt(D.grids.z,lat,lon)||0, zeye=zg+eye;
+  const ctr=+brgR.value, fov=+fovR.value;
+  const pitch=+pitR.value, ex=+exR.value;
+  const NC=quick?Math.max(150,Math.round(W/4)):Math.max(300,Math.min(860,Math.round(W/1.45)));
+  const sStride=quick?3:1;
+  const az0=ctr-fov/2, daz=fov/(NC-1), colW=W/NC;
+
+  /* Which peaks break the skyline. Each one walks the terrain out to itself,
+     so this is skipped on quick frames and the previous result is reused. */
+  if(quick && shown.length){
+    shown.forEach(s=>{s.rel=((brgTo(lat,lon,s.p.lat,s.p.lon)-az0)%360+360)%360;});
+    shown=shown.filter(s=>s.rel<=fov);
+  } else {
+  shown=[];
+  PK.forEach(p=>{
+    let rel=((brgTo(lat,lon,p.lat,p.lon)-az0)%360+360)%360;
+    if(rel>fov) return;
+    const dd=geo(lat,lon,p.lat,p.lon);
+    if(dd<300||dd>190000) return;
+    const pa=deg(Math.atan2(p.elev_m-drop(dd)-zeye,dd));
+    let mx=-90, bp=brgTo(lat,lon,p.lat,p.lon);
+    const stepP=rayStepper(lat,lon,bp), qp=[0,0];
+    for(let i=0;i<STEPS.length;i++){
+      const s=STEPS[i]; if(s>=dd-140) break;
+      stepP(s,qp); const zz=zAt(D.grids.z,qp[0],qp[1]);
+      if(zz===null||zz<=0) continue;
+      const a=deg(Math.atan2(zz-drop(s)-zeye,s));
+      if(a>mx) mx=a;
+    }
+    if(pa>mx+0.01) shown.push({p,rel,d:dd,ang:pa,clear:pa-mx});
+  });
+  shown.sort((a,b)=>(b.p.prominence_m-a.p.prominence_m)||(a.d-b.d));
+  shown=shown.slice(0,22); shown.sort((a,b)=>a.d-b.d);
+  }
+
+  /* TRUE EYE VIEW.
+     The old code stretched the vertical axis to fit whatever was on screen,
+     which came out around 6.6x taller than life - that is why everything felt
+     far too close - and it clipped the view at about -3 deg, so from a summit
+     you could not see your own slopes falling away.
+     Here one pixel is the same number of degrees in both directions, so the
+     picture matches what the eye actually receives. `ex` deliberately breaks
+     that 1:1 when the user wants distant hills legible, and `pitch` lets you
+     look down. */
+  const pxPerDeg = ex * W / fov;
+  const sky = a => H/2 - (a - pitch) * pxPerDeg;
+  const yHor = sky(0);
+  const vTop = pitch + (H/2)/pxPerDeg, vBot = pitch - (H/2)/pxPerDeg;
+
+  /* ---- sky ---- */
+  const gr=g.createLinearGradient(0,0,0,Math.max(yHor,1));
+  if(golden){gr.addColorStop(0,'#1a2444');gr.addColorStop(.45,'#6b4d6a');
+    gr.addColorStop(.78,'#c97d55');gr.addColorStop(1,'#f2b06a');}
+  else{gr.addColorStop(0,'#0d1b33');gr.addColorStop(.5,'#2a4a70');
+    gr.addColorStop(1,'#7fa0bd');}
+  g.fillStyle=gr;g.fillRect(0,0,W,Math.max(yHor,0));
+  if(yHor<H){g.fillStyle=golden?'#f2b06a':'#7fa0bd';g.fillRect(0,yHor,W,H-yHor);}
+
+  /* sun disc in golden mode, placed east-ish */
+  if(golden){
+    const sunAz=((90-az0)%360+360)%360;
+    if(sunAz<=fov){
+      const sx=(sunAz/fov)*W, sy=yHor-H*0.045;
+      const rg=g.createRadialGradient(sx,sy,2,sx,sy,H*0.30);
+      rg.addColorStop(0,'rgba(255,236,190,.95)');
+      rg.addColorStop(.16,'rgba(255,199,120,.55)');
+      rg.addColorStop(1,'rgba(255,180,84,0)');
+      g.fillStyle=rg;g.beginPath();g.arc(sx,sy,H*0.30,0,7);g.fill();
+      g.fillStyle='rgba(255,247,225,.98)';g.beginPath();g.arc(sx,sy,H*0.016,0,7);g.fill();
+    }
+  }
+
+  /* ---- terrain: paint each column only where the running max rises ---- */
+  const SUNAZ=rad(golden?95:315), SUNALT=rad(golden?12:45);
+  const dgLat=D.grids.z.dy, dgLon=D.grids.z.dx;
+  const hz = golden?[236,178,132]:[150,178,200];
+  /* Nothing on the island stands above ZMAX, so once the running skyline has
+     risen past the best angle any remaining distance could ever produce, the
+     rest of that ray cannot change the picture and we stop walking it. */
+  const ZMAX=PK.length?PK.reduce((m,p)=>Math.max(m,p.elev_m),0)+30:2560;
+  const capAng=new Float32Array(STEPS.length);
+  for(let i=0;i<STEPS.length;i++)
+    capAng[i]=deg(Math.atan2(ZMAX-drop(STEPS[i])-zeye,STEPS[i]));
+
+  const q=[0,0];
+  for(let c=0;c<NC;c++){
+    const A=az0+c*daz, x=c*colW;
+    const step=rayStepper(lat,lon,A);
+    let mx=-90, painted=-90;
+    for(let i=0;i<STEPS.length;i+=sStride){
+      if(capAng[i]<=mx) break;
+      const s=STEPS[i];
+      step(s,q);
+      const z0=zAt(D.grids.z,q[0],q[1]);
+      if(z0===null||z0<=0) continue;
+      const a=deg(Math.atan2(z0-drop(s)-zeye,s));
+      if(a<=mx) continue;
+      mx=a;
+      /* From low ground the skyline creeps up hundreds of times per column.
+         Filling each rise separately meant ~130k canvas ops a frame and took
+         15 s. Accumulate until the strip is actually a pixel tall, then paint
+         once - identical picture, a fraction of the work. */
+      const yNew=sky(mx), yPrev=(painted<=-89)?H:sky(painted);
+      if(yPrev-yNew < 0.9 && i+sStride < STEPS.length) continue;
+      const ze=zAt(D.grids.z,q[0],q[1]+dgLon), zn=zAt(D.grids.z,q[0]+dgLat,q[1]);
+      let sh=.75;
+      if(ze!==null&&zn!==null){
+        const mxg=(ze-z0)/222, myg=(zn-z0)/222;
+        const slope=Math.atan(Math.hypot(mxg,myg));
+        const asp=Math.atan2(myg,-mxg);
+        sh=Math.cos(SUNALT)*Math.cos(slope)+Math.sin(SUNALT)*Math.sin(slope)*Math.cos(SUNAZ-asp);
+        sh=Math.max(.2,Math.min(1.15,sh));
+      }
+      const f=Math.exp(-s/48000);            /* atmospheric depth */
+      const base = golden ? [52+sh*118, 60+sh*92, 52+sh*66]
+                          : [34+sh*88, 58+sh*100, 44+sh*74];
+      const R=Math.round(base[0]*f+hz[0]*(1-f)),
+            G2=Math.round(base[1]*f+hz[1]*(1-f)),
+            B=Math.round(base[2]*f+hz[2]*(1-f));
+      g.fillStyle=`rgb(${R},${G2},${B})`;
+      g.fillRect(x,yNew,colW+.9,Math.max(yPrev-yNew,.8));
+      /* lit crest line */
+      const cl=Math.min(255,Math.round(200*f+150));
+      g.fillStyle=`rgba(${cl},${Math.round(cl*.93)},${Math.round(cl*.8)},${.10+.32*f})`;
+      g.fillRect(x,yNew,colW+.9,Math.max(.8,1.2*f));
+      painted=mx;
+    }
+  }
+
+  /* ---- horizon + angle guides ---- */
+  g.strokeStyle='rgba(255,255,255,.30)';g.lineWidth=1;
+  g.beginPath();g.moveTo(0,yHor);g.lineTo(W,yHor);g.stroke();
+  g.setLineDash([2,7]);g.strokeStyle='rgba(255,255,255,.13)';
+  const gstep = (vTop-vBot)>50?10:(vTop-vBot)>18?5:(vTop-vBot)>6?2:1;
+  for(let a=Math.ceil(vBot/gstep)*gstep;a<=vTop;a+=gstep){
+    if(a===0) continue;
+    const y=sky(a);g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();
+    g.setLineDash([]);g.fillStyle='rgba(255,255,255,.34)';
+    g.font='10px ui-sans-serif,system-ui';g.fillText(a+'°',4,y-3);
+    g.setLineDash([2,7]);
+  }
+  g.setLineDash([]);
+
+  /* ---- compass strip ---- */
+  const bh=26;
+  g.fillStyle='rgba(11,16,32,.62)';g.fillRect(0,H-bh,W,bh);
+  g.font='600 11px ui-sans-serif,system-ui';g.textBaseline='middle';
+  const tickStep=fov>120?30:(fov>60?15:10);
+  for(let a=Math.ceil(az0/tickStep)*tickStep;a<=az0+fov;a+=tickStep){
+    const x=((a-az0)/fov)*W, aa=((a%360)+360)%360;
+    const card=aa%45===0;
+    g.strokeStyle=card?'rgba(255,180,84,.75)':'rgba(255,255,255,.25)';
+    g.beginPath();g.moveTo(x,H-bh);g.lineTo(x,H-bh+(card?9:5));g.stroke();
+    g.fillStyle=card?'#ffb454':'rgba(255,255,255,.5)';
+    g.textAlign='center';
+    g.fillText(card?compass(aa):aa+'°',x,H-bh/2+4);
+  }
+  g.textAlign='left';g.textBaseline='alphabetic';
+
+  /* ---- numbered peak labels ---- */
+  const placed=[];
+  shown.forEach(s=>{
+    const x=(s.rel/fov)*W; const y=sky(s.ang);
+    let ly=y-20;
+    while(placed.some(q=>Math.abs(q.x-x)<30&&Math.abs(q.y-ly)<19)) ly-=19;
+    placed.push({x,y:ly}); s.sx=x; s.sy=y; s.ly=ly;
+    g.strokeStyle='rgba(255,255,255,.42)';g.lineWidth=1;
+    g.beginPath();g.moveTo(x,y);g.lineTo(x,ly+9);g.stroke();
+    g.beginPath();g.arc(x,y,3.4,0,7);g.fillStyle='#ffb454';g.fill();
+    g.strokeStyle='rgba(0,0,0,.6)';g.lineWidth=1.2;g.stroke();
+    const t=String(s.p.no);
+    g.font='750 11px ui-sans-serif,system-ui';
+    const w=g.measureText(t).width+14;
+    g.fillStyle='rgba(11,16,32,.93)';g.strokeStyle='#ffb454';g.lineWidth=1.2;
+    g.beginPath();g.roundRect(x-w/2,ly-2,w,17,5);g.fill();g.stroke();
+    g.fillStyle='#ffb454';g.textAlign='center';g.fillText(t,x,ly+10);g.textAlign='left';
+  });
+
+  /* ---- side list + caption ---- */
+  document.getElementById('vcount').textContent=shown.length;
+  document.getElementById('vlistin').innerHTML = shown.length
+    ? shown.map(s=>`<div class="prow" data-no="${s.p.no}">
+        <div class="num">${s.p.no}</div>
+        <div class="pnm">${s.p.name||'<i>unnamed</i>'}</div>
+        <div class="pel">${(s.d/1000).toFixed(0)} km</div></div>`).join('')
+    : '<div class="hint" style="padding:18px 14px">No catalogued mountain breaks the skyline this way. Try turning around.</div>';
+  [...document.querySelectorAll('#vlistin .prow')].forEach(r=>r.onclick=()=>{
+    const p=PK[+r.dataset.no-1];
+    brgR.value=Math.round(brgTo(lat,lon,p.lat,p.lon));
+    document.getElementById('brgv').textContent=brgR.value+'° '+compass(+brgR.value);
+    render();});
+
+  const far=shown.length?shown[shown.length-1]:null;
+  document.getElementById('vfoot').innerHTML=
+    `Standing at <b>${lat.toFixed(4)}, ${lon.toFixed(4)}</b> ·
+     ground <b>${zg.toFixed(0)} m</b> · eye <b>${eye<10?eye.toFixed(1):Math.round(eye)} m</b> ·
+     facing <b>${compass(ctr)} (${ctr}°)</b> ·
+     <b>${shown.length}</b> mountains on the skyline${far?` · furthest
+     <b>#${far.p.no} ${far.p.name||'unnamed'}</b> at ${(far.d/1000).toFixed(0)} km`:''}
+     <div class="sub">${ex===1
+       ? 'Shown at <b>true scale</b> — one pixel is the same angle across and up, so this is the size your eye would really see. Distant mountains genuinely are this small; raise <b>Height scale</b> to exaggerate them.'
+       : `Heights exaggerated <b>×${ex}</b> for legibility — at true scale these hills would be ${ex}× flatter.`}
+     Ridge outline from a ~220 m terrain model; earth curvature and the bending of
+     light are included. Haze is drawn for depth, not measured.</div>`;
+  updateHash();
+}
+
+cv.onmousemove=e=>{
+  const r=cv.getBoundingClientRect(), x=e.clientX-r.left, y=e.clientY-r.top;
+  const hit=shown.find(s=>Math.abs(s.sx-x)<15&&y>s.ly-8&&y<s.sy+10);
+  if(hit){tip.style.display='block';
+    tip.style.left=Math.min(x+14,r.width-210)+'px';
+    tip.style.top=Math.max(y-42,4)+'px';
+    tip.innerHTML=`<b>#${hit.p.no} ${hit.p.name||'unnamed summit'}</b><br>
+      ${Math.round(hit.p.elev_m)} m tall · ${(hit.d/1000).toFixed(1)} km away<br>
+      stands ${hit.clear.toFixed(2)}° above the ridge in front`;}
+  else tip.style.display='none';
+};
+cv.onmouseleave=()=>tip.style.display='none';
+/* drag to look around: sideways turns, up/down tilts */
+let dragX=null,dragY=null;
+cv.onmousedown=e=>{dragX=e.clientX;dragY=e.clientY;};
+window.addEventListener('mouseup',()=>{dragX=dragY=null;});
+window.addEventListener('mousemove',e=>{
+  if(dragX===null) return;
+  const dx=e.clientX-dragX, dy=e.clientY-dragY;
+  if(Math.abs(dx)<2&&Math.abs(dy)<2) return;
+  const W=cv.clientWidth||900, degPerPx=(+fovR.value)/W;
+  brgR.value=((+brgR.value - dx*degPerPx)%360+360)%360|0;
+  pitR.value=Math.max(-60,Math.min(35,
+    +pitR.value - dy*degPerPx*(+exR.value?1/+exR.value:1)));
+  dragX=e.clientX; dragY=e.clientY; syncLabels(); renderQuick();});
+
+document.getElementById('spin').onclick=()=>{
+  let n=0; const t=setInterval(()=>{
+    brgR.value=((+brgR.value+5)%360);
+    document.getElementById('brgv').textContent=brgR.value+'° '+compass(+brgR.value);
+    renderQuick(); if(++n>=72) clearInterval(t);},60);};
+window.addEventListener('resize',()=>{
+  if(document.getElementById('pview').classList.contains('on')) render();
+  else map.invalidateSize();});
+
+/* ---------- actions ---------- */
+function toast(m){const t=document.getElementById('toast');t.textContent=m;
+  t.classList.add('on');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('on'),2400);}
+document.getElementById('btnLoc').onclick=()=>{
+  if(!navigator.geolocation){toast('Your browser cannot share a location.');return;}
+  toast('Finding you…');
+  navigator.geolocation.getCurrentPosition(
+    p=>{const {latitude:la,longitude:lo}=p.coords;
+      if(la<5.5||la>10.2||lo<79.2||lo>82.2){toast('You appear to be outside Sri Lanka — drop a pin instead.');return;}
+      setViewPoint(la,lo);map.setView([la,lo],11);toast('Found you.');},
+    ()=>toast('Could not get your location.'),{enableHighAccuracy:true,timeout:8000});
+};
+document.getElementById('btnShare').onclick=async()=>{
+  updateHash();
+  try{await navigator.clipboard.writeText(location.href);toast('Link copied.');}
+  catch{toast('Copy the address bar to share this view.');}
+};
+document.getElementById('btnHelp').onclick=()=>document.getElementById('veil').classList.remove('hide');
+function closeIntro(never){
+  document.getElementById('veil').classList.add('hide');
+  if(never) try{localStorage.setItem('slp_seen','1');}catch{}
+}
+/* mobile sheet */
+document.getElementById('sheetgrip').onclick=()=>
+  document.getElementById('side').classList.toggle('up');
+
+/* ---------- shareable state ---------- */
+let hashLock=false;
+function updateHash(){
+  if(hashLock||!viewPt) return;
+  const tab=document.getElementById('pview').classList.contains('on')?'v':'m';
+  location.replace('#'+[tab,viewPt.lat.toFixed(4),viewPt.lon.toFixed(4),
+    brgR.value,fovR.value,Math.round(eyeVal()),pitR.value,exR.value].join('/'));
+}
+function readHash(){
+  const s=location.hash.replace(/^#/,'').split('/');
+  if(s.length<3) return false;
+  const la=+s[1],lo=+s[2];
+  if(!isFinite(la)||!isFinite(lo)) return false;
+  hashLock=true;
+  if(s[3]!==undefined) brgR.value=+s[3]||90;
+  if(s[4]!==undefined) fovR.value=+s[4]||70;
+  if(s[5]!==undefined) eyeR.value=Math.max(+s[5]||2,2);
+  if(s[6]!==undefined) pitR.value=+s[6]||0;
+  if(s[7]!==undefined) exR.value=Math.max(1,+s[7]||1);
+  syncLabels();
+  setViewPoint(la,lo); map.setView([la,lo],11);
+  hashLock=false;
+  if(s[0]==='v') showTab('pview');
+  return true;
+}
+
+/* ---------- branding (chrome only, never over the map or the view) ------- */
+if(D.brand){
+  document.getElementById('brandMark').src='data:image/png;base64,'+D.brand.mark;
+  document.getElementById('brandWord').src='data:image/png;base64,'+D.brand.wordmark;
+  const ic=document.createElement('link');
+  ic.rel='icon'; ic.type='image/png';
+  ic.href='data:image/png;base64,'+D.brand.mark;
+  document.head.appendChild(ic);
+}
+document.getElementById('brandsub').textContent=
+  PK.length.toLocaleString()+' mountains · what you can see, from where';
+
+/* ---------- one-time nudges ---------- */
+function killNudge(id){
+  const n=document.getElementById(id); if(!n||n._dead) return;
+  n._dead=true; n.classList.add('gone'); setTimeout(()=>n.remove(),600);
+}
+setTimeout(()=>killNudge('mapNudge'),9000);
+setTimeout(()=>killNudge('dragNudge'),9000);
+map.on('click',()=>killNudge('mapNudge'));
+cv.addEventListener('mousedown',()=>killNudge('dragNudge'));
+cv.addEventListener('touchstart',()=>killNudge('dragNudge'),{passive:true});
+
+/* ---------- keyboard ---------- */
+window.addEventListener('keydown',e=>{
+  if(/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) return;
+  const viewing=document.getElementById('pview').classList.contains('on');
+  const k=e.key;
+  if(k==='?'||k==='/'){document.getElementById('veil').classList.remove('hide');e.preventDefault();return;}
+  if(k==='Escape'){document.getElementById('veil').classList.add('hide');return;}
+  if(k==='m'||k==='M'){showTab('pmap');return;}
+  if(k==='v'||k==='V'){showTab('pview');return;}
+  if(k==='l'||k==='L'){document.getElementById('btnLoc').click();return;}
+  if(k==='s'||k==='S'){document.getElementById('btnShare').click();return;}
+  if(!viewing) return;
+  const step=e.shiftKey?15:5;
+  if(k==='ArrowLeft'){brgR.value=((+brgR.value-step)%360+360)%360;killNudge('dragNudge');}
+  else if(k==='ArrowRight'){brgR.value=((+brgR.value+step)%360+360)%360;killNudge('dragNudge');}
+  else if(k==='ArrowUp'){pitR.value=Math.min(35,+pitR.value+3);killNudge('dragNudge');}
+  else if(k==='ArrowDown'){pitR.value=Math.max(-60,+pitR.value-3);killNudge('dragNudge');}
+  else if(k==='+'||k==='='){fovR.value=Math.max(15,+fovR.value-5);}
+  else if(k==='-'||k==='_'){fovR.value=Math.min(150,+fovR.value+5);}
+  else if(k==='f'||k==='F'){document.getElementById('autof').click();return;}
+  else return;
+  e.preventDefault(); syncLabels(); renderQuick();
+});
+
+/* ---------- boot ---------- */
+drawMarkers(); renderList('');
+syncLabels();
+decodeGrid(D.grids.z,()=>{
+  document.getElementById('load').classList.add('hide');
+  let seen=false; try{seen=localStorage.getItem('slp_seen')==='1';}catch{}
+  if(!readHash()){
+    setViewPoint(6.9271,79.8612);          /* Colombo: most people start here */
+    map.setView([7.55,80.7],8);
+  }
+  if(!seen) document.getElementById('veil').classList.remove('hide');
+});
+</script>
+</body>
+</html>

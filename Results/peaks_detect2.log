@@ -1,0 +1,50 @@
+loading DEM ...
+  highland bbox 7125x12131 (86 M cells), high point 2520.7 m (24s)
+  98,392 local maxima >= 200 m (64s)
+  flooding 245 levels ...
+     2520.7 m  comps      1  active     1      2s
+     2320.7 m  comps      7  active     7     31s
+     2120.7 m  comps     29  active    29     52s
+     1920.7 m  comps    102  active   102     79s
+     1720.7 m  comps     50  active    50    103s
+     1520.7 m  comps     94  active    94    152s
+     1320.7 m  comps    249  active   249    202s
+     1120.7 m  comps    220  active   220    246s
+      920.7 m  comps    182  active   182    299s
+      720.7 m  comps    312  active   312    348s
+      520.7 m  comps    986  active   986    417s
+      320.7 m  comps   1630  active  1630    522s
+      120.7 m  comps   9609  active   326    602s
+  flooding done (610s)
+  4,406 peaks with prominence >= 50 m
+  146 matched an OSM name
+
+top 25 by prominence:
+    # name                          elev    prom   lat, lon
+    1 Pidurutalagala                2521    2521   7.0009, 80.7735
+    2 Gombaniya                     1893    1412   7.4543, 80.7509
+    3 (unnamed)                     1376    1125   6.4361, 80.5766
+    4 Namunukula                    2033    1023   6.9327, 81.1131
+    5 (unnamed)                     1109     929   6.8777, 81.3878
+    6 Kabaragala                    1508     847   7.0703, 80.5025
+    7 Kiribathgala                   945     794   6.6129, 80.5174
+    8 (unnamed)                     1522     762   6.6531, 80.6254
+    9 (unnamed)                     1206     746   7.6059, 80.5777
+   10 Brandigala                    1248     737   7.4900, 80.5813
+   11 Sri Paadaya Peak              2190     689   6.8096, 80.4994
+   12 (unnamed)                     1511     670   7.0198, 81.1738
+   13 Narangala                     1566     665   7.0356, 81.0106
+   14 (unnamed)                      660     660   6.3320, 80.2995
+   15 Udaperuwahela                  865     654   7.2639, 81.4071
+   16 (unnamed)                      881     620   7.1934, 80.4054
+   17 (unnamed)                      926     615   6.6006, 80.3617
+   18 (unnamed)                      863     612   7.3110, 81.2634
+   19 (unnamed)                      942     611   6.9685, 80.3725
+   20 (unnamed)                      786     605   7.4321, 80.4147
+   21 (unnamed)                      880     600   7.7744, 80.7107
+   22 (unnamed)                      592     592   7.4431, 81.5081
+   23 Ritigala                       756     586   8.1094, 80.6567
+   24 (unnamed)                     1518     558   7.1659, 80.8023
+   25 (unnamed)                      677     556   7.3810, 81.4871
+
+wrote C:\Users\thush\OneDrive\Desktop\SriLankaPeaks\Results\SriLanka_peaks_detected.csv  (701s total)

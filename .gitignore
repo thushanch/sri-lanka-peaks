@@ -1,0 +1,10 @@
+# This project is small (28 MB) because it borrows its terrain from SriPada
+# rather than holding its own copy, so nothing bulky needs excluding.
+#
+# Viewsheds/ is deliberately kept. It is only 21 MB but represents roughly
+# 90 minutes of compute (about 2 minutes per peak, 45 peaks), and
+# 21_peak_viewsheds.py is resumable only if these survive.
+
+# QGIS scratch
+*.qgz~
+*.qgd

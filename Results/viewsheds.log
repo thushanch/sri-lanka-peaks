@@ -1,0 +1,63 @@
+loading DEM ...
+  301 MB (23s)
+45 peaks to process
+
+  [  3/45] Peak 1376 m                    1376 m  range   156 km  sees   2,634 km2  ( 206s)
+  [  4/45] Namunukula                     2033 m  range   188 km  sees   9,498 km2  ( 309s)
+  [  5/45] Peak 1109 m                    1109 m  range   140 km  sees   5,432 km2  ( 206s)
+  [  6/45] Kabaragala                     1508 m  range   163 km  sees   4,712 km2  ( 302s)
+  [  7/45] Kiribathgala                    945 m  range   130 km  sees   1,374 km2  ( 185s)
+  [  8/45] Peak 1522 m                    1522 m  range   163 km  sees   3,599 km2  ( 248s)
+  [  9/45] Peak 1206 m                    1206 m  range   146 km  sees   9,887 km2  ( 189s)
+  [ 10/45] Brandigala                     1248 m  range   148 km  sees   6,968 km2  ( 119s)
+  [ 11/45] Sri Paadaya Peak               2190 m  range   195 km  sees   7,931 km2  ( 187s)
+  [ 12/45] Peak 1511 m                    1511 m  range   163 km  sees   5,885 km2  ( 166s)
+  [ 13/45] Narangala                      1566 m  range   166 km  sees   3,402 km2  ( 180s)
+  [ 14/45] Peak 660 m                      660 m  range   109 km  sees   1,071 km2  (  78s)
+  [ 15/45] Udaperuwahela                   865 m  range   124 km  sees   4,188 km2  ( 115s)
+  [ 16/45] Peak 881 m                      881 m  range   126 km  sees   3,069 km2  ( 100s)
+  [ 17/45] Peak 926 m                      926 m  range   129 km  sees   1,868 km2  (  84s)
+  [ 18/45] Peak 863 m                      863 m  range   124 km  sees   3,758 km2  (  94s)
+  [ 19/45] Peak 942 m                      942 m  range   130 km  sees   2,370 km2  (  82s)
+  [ 20/45] Peak 786 m                      786 m  range   119 km  sees   3,961 km2  (  77s)
+  [ 21/45] Peak 880 m                      880 m  range   126 km  sees   7,119 km2  (  95s)
+  [ 22/45] Peak 592 m                      592 m  range   104 km  sees   3,469 km2  (  59s)
+  [ 23/45] Ritigala                        756 m  range   117 km  sees   8,082 km2  (  83s)
+  [ 24/45] Peak 1518 m                    1518 m  range   163 km  sees   2,586 km2  ( 249s)
+  [ 25/45] Peak 677 m                      677 m  range   111 km  sees   3,630 km2  (  91s)
+  [ 26/45] Kirigalpotta                   2380 m  range   203 km  sees   7,041 km2  ( 187s)
+  [ 27/45] Wadinagala Summit               668 m  range   110 km  sees   2,940 km2  (  67s)
+  [ 28/45] Peak 685 m                      685 m  range   111 km  sees   2,514 km2  (  83s)
+  [ 29/45] Peak 1305 m                    1305 m  range   152 km  sees   4,485 km2  ( 123s)
+  [ 30/45] Peak 540 m                      540 m  range    99 km  sees   1,355 km2  (  64s)
+  [ 31/45] Peak 532 m                      532 m  range    99 km  sees   4,888 km2  (  83s)
+  [ 32/45] Peacock Hill                   1499 m  range   162 km  sees   2,719 km2  ( 187s)
+  [ 33/45] Peak 868 m                      868 m  range   125 km  sees   5,820 km2  ( 118s)
+  [ 34/45] Peak 677 m                      677 m  range   111 km  sees   3,829 km2  (  95s)
+  [ 35/45] Nayabedde Peak                 1953 m  range   184 km  sees   6,526 km2  ( 170s)
+  [ 36/45] Peak 682 m                      682 m  range   111 km  sees   1,526 km2  ( 143s)
+  [ 37/45] Mountain Peak Kalubovitiya      732 m  range   115 km  sees     694 km2  (  67s)
+  [ 38/45] Peak 2049 m                    2049 m  range   189 km  sees   3,776 km2  ( 139s)
+  [ 39/45] Peak 756 m                      756 m  range   117 km  sees   2,072 km2  ( 106s)
+  [ 40/45] Peak 826 m                      826 m  range   122 km  sees   2,502 km2  ( 104s)
+  [ 41/45] Dolukanda                       624 m  range   107 km  sees   3,356 km2  ( 125s)
+  [ 42/45] Peak 2077 m                    2077 m  range   190 km  sees   2,920 km2  ( 248s)
+  [ 43/45] Alagalla                       1007 m  range   134 km  sees   3,841 km2  ( 125s)
+  [ 44/45] Peak 657 m                      657 m  range   109 km  sees   2,627 km2  (  84s)
+  [ 45/45] Peak 478 m                      478 m  range    94 km  sees     370 km2  (  98s)
+
+wrote C:\Users\thush\OneDrive\Desktop\SriLankaPeaks\Results\peak_viewshed_index.json   (5944s total)
+
+most widely visible peaks:
+  Gombaniya                        1893 m    15,407 km2   23.4% of the island
+  Pidurutalagala                   2521 m    10,752 km2   16.3% of the island
+  Peak 1206 m                      1206 m     9,887 km2   15.0% of the island
+  Namunukula                       2033 m     9,498 km2   14.4% of the island
+  Ritigala                          756 m     8,082 km2   12.3% of the island
+  Sri Paadaya Peak                 2190 m     7,931 km2   12.0% of the island
+  Peak 880 m                        880 m     7,119 km2   10.8% of the island
+  Kirigalpotta                     2380 m     7,041 km2   10.7% of the island
+  Brandigala                       1248 m     6,968 km2   10.6% of the island
+  Nayabedde Peak                   1953 m     6,526 km2    9.9% of the island
+  Peak 1511 m                      1511 m     5,885 km2    8.9% of the island
+  Peak 868 m                        868 m     5,820 km2    8.8% of the island
